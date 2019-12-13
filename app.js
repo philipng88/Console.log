@@ -42,6 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Configure passport and sessions
 app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET,
@@ -49,8 +50,9 @@ app.use(
     saveUninitialized: true
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Configure passport
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -59,6 +61,19 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+});
 
 app.listen(port, () => {
   console.log(`The app has started on port ${port}`);

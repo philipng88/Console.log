@@ -1,7 +1,8 @@
 const express = require('express');
+const { postRegister, postLogin, getLogout } = require('../controllers');
+const { errorHandler } = require('../middleware');
 
 const router = express.Router();
-const { postRegister } = require('../controllers/index');
 
 router.get('/', (req, res, next) => {
   res.render('index', { title: 'Console.log' });
@@ -11,15 +12,14 @@ router.get('/register', (req, res, next) => {
   res.send('Register page');
 });
 
-router.post('/register', postRegister);
+router.post('/register', errorHandler(postRegister));
 
 router.get('/login', (req, res, next) => {
   res.send('Login page');
 });
 
-router.post('/login', (req, res, next) => {
-  res.send('Login');
-});
+router.post('/login', postLogin);
+router.get('/logout', getLogout);
 
 router.get('/profile', (req, res, next) => {
   res.send('Profile page');
