@@ -1,0 +1,14 @@
+extends ../layout.pug
+block content
+  .container
+    h1= post.title
+    p Price: $#{post.price}
+    p= post.description
+    p= post.location
+    a.btn.btn-primary(href=`/posts/${post.id}/edit`) 
+      i.fas.fa-edit
+      |   Edit
+    form(action=`/posts/${post.id}?_method=DELETE` method="POST")
+      button.btn.btn-danger(type="submit")
+        i.fas.fa-trash-alt
+        |   Delete

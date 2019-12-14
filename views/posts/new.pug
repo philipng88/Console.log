@@ -1,0 +1,18 @@
+extends ../layout.pug
+block content
+  .container
+    h1 Create New Post
+    form(action="/posts" method="POST")
+      .form-group
+        input.form-control(type='text' name='post[title]' placeholder='Title' required)
+      .form-group
+        .input-group
+          .input-group-prepend
+            span.input-group-text
+              i.fas.fa-dollar-sign
+          input.form-control(type='text' name='post[price]' placeholder='Price' required)
+      .form-group
+        textarea.form-control(name='post[description]' placeholder='Description')
+      .form-group
+        input.form-control(type='text' name='post[location]' placeholder='Location' required)
+      input.btn.btn-primary(type='submit')
