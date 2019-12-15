@@ -7,6 +7,9 @@ block content
       a.h3.card-header(href=`/posts/${post.id}`) #{post.title}
       .card-body
         p Price: $#{post.price}
-        p= post.description
+        if post.description !== ''
+          p= post.description
+        else 
+          p.font-italic No description provided...
         p= post.location
 

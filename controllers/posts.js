@@ -1,4 +1,13 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+const cloudinary = require('cloudinary');
 const Post = require('../models/post');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 module.exports = {
   async postIndex(req, res, next) {
@@ -11,6 +20,22 @@ module.exports = {
   },
 
   async postCreate(req, res, next) {
+    req.body.post.images = [];
+    for (const file of req.files) {
+      const image = await cloudinary.v2.uploader.upload(
+        file.path,
+        {
+          folder: 'ConsoleLog/PostImages',
+          width: 200,
+          quality: 'auto:best'
+        },
+        (error, result) => console.log(result, error)
+      );
+      req.body.post.images.push({
+        url: image.secure_url,
+        public_id: image.public_id
+      });
+    }
     const post = await Post.create(req.body.post);
     res.redirect(`/posts/${post.id}`);
   },
@@ -26,14 +51,58 @@ module.exports = {
   },
 
   async postUpdate(req, res, next) {
-    const post = await Post.findByIdAndUpdate(req.params.id, req.body.post, {
-      new: true
-    });
+    const post = await Post.findById(req.params.id);
+
+    if (req.body.deleteImages && req.body.deleteImages.length) {
+      const deleteImages = req.body.deleteImages;
+      for (const publicId of deleteImages) {
+        await cloudinary.v2.uploader.destroy(publicId, (error, result) => {
+          console.log(result, error);
+        });
+        for (const image of post.images) {
+          if (image.public_id === publicId) {
+            const index = post.images.indexOf(image);
+            post.images.splice(index, 1);
+          }
+        }
+      }
+    }
+
+    if (req.files) {
+      for (const file of req.files) {
+        const image = await cloudinary.v2.uploader.upload(
+          file.path,
+          {
+            folder: 'ConsoleLog/PostImages',
+            width: 200,
+            quality: 'auto:best'
+          },
+          (error, result) => console.log(result, error)
+        );
+        post.images.push({
+          url: image.secure_url,
+          public_id: image.public_id
+        });
+      }
+    }
+
+    post.title = req.body.post.title;
+    post.description = req.body.post.description;
+    post.price = req.body.post.price;
+    post.location = req.body.post.location;
+    post.save();
+
     res.redirect(`/posts/${post.id}`);
   },
 
   async postDelete(req, res, next) {
-    await Post.findByIdAndRemove(req.params.id);
+    const post = await Post.findById(req.params.id);
+    for (const image of post.images) {
+      await cloudinary.v2.uploader.destroy(image.public_id, (error, result) => {
+        console.log(result, error);
+      });
+    }
+    await post.remove();
     res.redirect('/posts');
   }
 };

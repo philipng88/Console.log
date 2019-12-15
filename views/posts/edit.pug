@@ -2,7 +2,7 @@ extends ../layout.pug
 block content
   .container
     h1 Edit Post: #{post.title}
-    form(action=`/posts/${post.id}?_method=PUT` method="POST")
+    form#postEditForm(action=`/posts/${post.id}?_method=PUT` method='POST' enctype='multipart/form-data')
       .form-group
         input.form-control(type='text' name='post[title]' placeholder='Title' value=`${post.title}` required)
       .form-group
@@ -12,9 +12,36 @@ block content
               i.fas.fa-dollar-sign
           input.form-control(type='text' name='post[price]' placeholder='Price' value=`${post.price}` required)
       .form-group
+        .custom-file
+          input#imageUpload.custom-file-input(type='file' accept='images/*' name='images' multiple)
+          label.custom-file-label(for='imageUpload') Choose file(s)
+      div
+        each image, index in post.images
+          img(src=`${image.url}` width='100px')
+          input.imageDeleteCheckbox(type='checkbox' id=`image${index}` value=`${image.public_id}` name='deleteImages[]')
+          label(for=`image${index}`) Delete
+      .form-group
         textarea.form-control(name='post[description]' placeholder='Description') #{post.description}
       .form-group
         input.form-control(type='text' name='post[location]' placeholder='Location' value=`${post.location}` required)
       button.btn.btn-primary(type='submit')
         i.fas.fa-save
         |   Save  
+block append scripts
+  script(src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js')
+  script.
+    $(document).ready(() => {
+      bsCustomFileInput.init()
+    })
+    let postEditForm = document.getElementById('postEditForm');
+    postEditForm.addEventListener('submit', event => {
+      let imageUploads = document.getElementById('imageUpload').files.length;
+      let existingImages = document.querySelectorAll('.imageDeleteCheckbox').length;
+      let imageDeletions = document.querySelectorAll('.imageDeleteCheckbox:checked').length;
+      let newTotal = existingImages - imageDeletions + imageUploads
+      if (newTotal > 4) {
+        event.preventDefault()
+        let removalAmount = newTotal - 4
+        alert(`You must remove at least ${removalAmount} more image${removalAmount === 1 ? '' : 's'} before saving`)
+      }
+    })
