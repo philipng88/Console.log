@@ -1,7 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const cloudinary = require('cloudinary');
 const Post = require('../models/post');
+
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,11 +15,11 @@ cloudinary.config({
 module.exports = {
   async postIndex(req, res, next) {
     const posts = await Post.find({});
-    res.render('posts/index', { posts, pageTitle: 'Posts' });
+    res.render('posts/index.pug', { posts, pageTitle: 'Posts' });
   },
 
   postNew(req, res, next) {
-    res.render('posts/new', { pageTitle: 'Create New Post' });
+    res.render('posts/new.pug', { pageTitle: 'Create New Post' });
   },
 
   async postCreate(req, res, next) {
@@ -36,18 +39,27 @@ module.exports = {
         public_id: image.public_id
       });
     }
+    const mapboxResponse = await geocodingClient
+      .forwardGeocode({
+        query: req.body.post.location,
+        limit: 1,
+        countries: ['us']
+      })
+      .send();
+    req.body.post.coordinates =
+      mapboxResponse.body.features[0].geometry.coordinates;
     const post = await Post.create(req.body.post);
     res.redirect(`/posts/${post.id}`);
   },
 
   async postShow(req, res, next) {
     const post = await Post.findById(req.params.id);
-    res.render('posts/show', { post, pageTitle: `${post.title}` });
+    res.render('posts/show.ejs', { post });
   },
 
   async postEdit(req, res, next) {
     const post = await Post.findById(req.params.id);
-    res.render('posts/edit', { post, pageTitle: 'Edit Post' });
+    res.render('posts/edit.pug', { post, pageTitle: 'Edit Post' });
   },
 
   async postUpdate(req, res, next) {
@@ -86,10 +98,21 @@ module.exports = {
       }
     }
 
+    if (req.body.post.location !== post.location) {
+      const mapboxResponse = await geocodingClient
+        .forwardGeocode({
+          query: req.body.post.location,
+          limit: 1,
+          countries: ['us']
+        })
+        .send();
+      post.coordinates = mapboxResponse.body.features[0].geometry.coordinates;
+      post.location = req.body.post.location;
+    }
+
     post.title = req.body.post.title;
     post.description = req.body.post.description;
     post.price = req.body.post.price;
-    post.location = req.body.post.location;
     post.save();
 
     res.redirect(`/posts/${post.id}`);
