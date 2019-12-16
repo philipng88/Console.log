@@ -1,0 +1,8 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbar-content' aria-controls='navbar-content' aria-expanded='false' aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbar-content.collapse.navbar-collapse
+    .navbar-nav
+      a.nav-item.nav-link(href='/' class={'active': pageTitle === 'Home'}) Home
+      a.nav-item.nav-link(href='/posts' class={'active': pageTitle === 'Posts'}) Posts
+      a.nav-item.nav-link(href='/posts/new' class={'active': pageTitle === 'Create New Post'}) Create Post

@@ -1,7 +1,6 @@
 extends ../layout.pug
 block content
   h1 Posts Index
-  a(href='/posts/new') Create New Post
   each post in posts 
     .card.w-50
       a.h3.card-header(href=`/posts/${post.id}`) #{post.title}

@@ -8,6 +8,7 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const hbs = require('hbs');
 
 const User = require('./models/user');
 
@@ -60,11 +61,24 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Set local variables
+app.use((req, res, next) => {
+  // Set success flash message
+  res.locals.success = req.session.success || '';
+  delete req.session.success;
+
+  // Set error flash message
+  res.locals.error = req.session.error || '';
+  delete req.session.error;
+  next();
+});
+
 // Mount Routes
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
 
+// Catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
@@ -72,10 +86,13 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.status(err.status || 500);
-  res.render('error.pug');
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.status(err.status || 500);
+  // res.render('error.pug', { pageTitle: 'ERROR' });
+  console.log(err);
+  req.session.error = err.message;
+  res.redirect('back');
 });
 
 app.listen(port, () => {

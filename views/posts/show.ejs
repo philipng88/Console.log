@@ -9,28 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.css">
-    <style>
-        .marker {
-            background-image: url('/images/mapbox-icon.png');
-            background-size: cover;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .mapboxgl-popup {
-            max-width: 200px;
-        }
-
-        .mapboxgl-popup-content {
-            text-align: center;
-            padding: 10px;
-            font-family: 'Open Sans', sans-serif;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles/post-show.css">
 </head>
 <body>
+    <%- include('../includes/navbar.ejs') %>
+    <%- include('../includes/flash-messages.ejs') %>
     <div class="container">
         <h1><%= post.title %></h1>
         <p>Price: $<%= post.price %></p>
@@ -49,20 +32,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.js"></script>
-    <script>
-        const post = <%- JSON.stringify(post) %>;
-        mapboxgl.accessToken = 'pk.eyJ1IjoicGhpbGlwbmciLCJhIjoiY2syN3hlZmtqMGw2cDNjbzZ3ZjQ5bHQ0aCJ9.3VrQXYtIqpcp9VNEwBnJyQ';
-    
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/light-v10',
-            center: post.coordinates,
-            zoom: 4
-        });
-    
-        const el = document.createElement('div');
-        el.className = 'marker';
-        new mapboxgl.Marker(el).setLngLat(post.coordinates).setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p class='font-weight-bold m-0'>${post.location}</p>`)).addTo(map);    
-    </script>
+    <script>const post = <%- JSON.stringify(post) %>;</script>
+    <script src="/js/post-show.js"></script>
 </body>
 </html>

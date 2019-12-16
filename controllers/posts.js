@@ -49,6 +49,7 @@ module.exports = {
     req.body.post.coordinates =
       mapboxResponse.body.features[0].geometry.coordinates;
     const post = await Post.create(req.body.post);
+    req.session.success = 'Post created successfully!';
     res.redirect(`/posts/${post.id}`);
   },
 
