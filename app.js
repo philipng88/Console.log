@@ -8,7 +8,6 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-const hbs = require('hbs');
 
 const User = require('./models/user');
 
@@ -25,7 +24,8 @@ mongoose
   .connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
   })
   .catch(error => console.log(error));
 mongoose.connection.on('connected', () =>
@@ -36,7 +36,6 @@ mongoose.connection.on('error', err => console.log(err));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -63,6 +62,14 @@ passport.deserializeUser(User.deserializeUser());
 
 // Set local variables
 app.use((req, res, next) => {
+  // Set default user for development
+  req.user = {
+    // eslint-disable-next-line prettier/prettier
+    _id: '5df8452df54e022b44d9fe2f',
+    // eslint-disable-next-line prettier/prettier
+    username: 'Homer'
+  };
+  res.locals.currentUser = req.user;
   // Set success flash message
   res.locals.success = req.session.success || '';
   delete req.session.success;
@@ -89,7 +96,7 @@ app.use((err, req, res, next) => {
   // res.locals.message = err.message;
   // res.locals.error = req.app.get('env') === 'development' ? err : {};
   // res.status(err.status || 500);
-  // res.render('error.pug', { pageTitle: 'ERROR' });
+  // res.render('error', { pageTitle: 'ERROR' });
   console.log(err);
   req.session.error = err.message;
   res.redirect('back');

@@ -1,18 +1,19 @@
-/* eslint-disable */
-$(document).ready(() => {
-  bsCustomFileInput.init();
-});
+/* eslint-disable no-undef */
+/* eslint-disable no-alert */
+const postEditForm = document.getElementById('postEditForm');
 
-let postEditForm = document.getElementById('postEditForm');
 postEditForm.addEventListener('submit', event => {
-  let imageUploads = document.getElementById('imageUpload').files.length;
-  let existingImages = document.querySelectorAll('.imageDeleteCheckbox').length;
-  let imageDeletions = document.querySelectorAll('.imageDeleteCheckbox:checked')
+  const imageUploads = document.getElementById('imageUpload').files.length;
+  const existingImages = document.querySelectorAll('.imageDeleteCheckbox')
     .length;
-  let newTotal = existingImages - imageDeletions + imageUploads;
+  const imageDeletions = document.querySelectorAll(
+    '.imageDeleteCheckbox:checked'
+  ).length;
+  const newTotal = existingImages - imageDeletions + imageUploads;
+
   if (newTotal > 4) {
     event.preventDefault();
-    let removalAmount = newTotal - 4;
+    const removalAmount = newTotal - 4;
     alert(
       `You must remove at least ${removalAmount} more image${
         removalAmount === 1 ? '' : 's'

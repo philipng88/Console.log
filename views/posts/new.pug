@@ -1,30 +1,11 @@
-extends ../layout.pug
+extends ../layout
 block content
   .container
     h1 Create New Post
     form(action="/posts" method="POST" enctype="multipart/form-data")
-      .form-group
-        input.form-control(type='text' name='post[title]' placeholder='Title' required)
-      .form-group
-        .input-group
-          .input-group-prepend
-            span.input-group-text
-              i.fas.fa-dollar-sign
-          input.form-control(type='text' name='post[price]' placeholder='Price' required)
-      .form-group
-        .custom-file
-          input#imageUpload.custom-file-input(type='file' accept='images/*' name='images' multiple)
-          label.custom-file-label(for='imageUpload') Choose file(s)
-      .form-group
-        textarea.form-control(name='post[description]' placeholder='Description')
-      .form-group
-        input.form-control(type='text' name='post[location]' placeholder='Location' required)
-      input.btn.btn-primary(type='submit')
-block append scripts
-  script(src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js')
-  script.
-    $(document).ready(() => {
-      bsCustomFileInput.init()
-    })
-
-
+      input.u-full-width(type='text' name='post[title]' placeholder='Title' required)
+      input.u-full-width(type='text' name='post[price]' placeholder='Price' required)
+      input(type='file' accept='images/*' name='images' multiple)
+      textarea.u-full-width(name='post[description]' placeholder='Description')
+      input.u-full-width(type='text' name='post[location]' placeholder='Location' required)
+      input.button-primary(type='submit')

@@ -1,3 +1,8 @@
+#map {
+  width: 350px;
+  height: 200px;
+}
+
 .marker {
   background-image: url('/images/mapbox-icon.png');
   background-size: cover;
@@ -15,4 +20,9 @@
   text-align: center;
   padding: 10px;
   font-family: 'Open Sans', sans-serif;
+}
+
+.mapboxgl-popup-close-button,
+.edit-review-form {
+  display: none;
 }

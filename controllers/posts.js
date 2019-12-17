@@ -15,11 +15,11 @@ cloudinary.config({
 module.exports = {
   async postIndex(req, res, next) {
     const posts = await Post.find({});
-    res.render('posts/index.pug', { posts, pageTitle: 'Posts' });
+    res.render('posts/index', { posts, pageTitle: 'Posts' });
   },
 
   postNew(req, res, next) {
-    res.render('posts/new.pug', { pageTitle: 'Create New Post' });
+    res.render('posts/new', { pageTitle: 'Create New Post' });
   },
 
   async postCreate(req, res, next) {
@@ -54,13 +54,20 @@ module.exports = {
   },
 
   async postShow(req, res, next) {
-    const post = await Post.findById(req.params.id);
-    res.render('posts/show.ejs', { post });
+    const post = await Post.findById(req.params.id).populate({
+      path: 'reviews',
+      options: { sort: { _id: -1 } },
+      populate: {
+        path: 'author',
+        model: 'User'
+      }
+    });
+    res.render('posts/show', { post, pageTitle: post.title });
   },
 
   async postEdit(req, res, next) {
     const post = await Post.findById(req.params.id);
-    res.render('posts/edit.pug', { post, pageTitle: 'Edit Post' });
+    res.render('posts/edit', { post, pageTitle: 'Edit Post' });
   },
 
   async postUpdate(req, res, next) {
@@ -127,6 +134,7 @@ module.exports = {
       });
     }
     await post.remove();
+    req.session.success = 'Post deleted';
     res.redirect('/posts');
   }
 };

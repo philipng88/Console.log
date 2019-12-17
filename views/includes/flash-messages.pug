@@ -1,11 +1,5 @@
 if success && success.length
-  .alert.alert-sucess.alert-dismissible.fade.show(role='alert') 
-    span.font-weight-bold #{success}
-    button.close(type='button' data-dismiss='alert' aria-label='Close')
-      span(aria-hidden=true) &times;
+  h3(style='color: green;')= success
 
 if error && error.length
-  .alert.alert-danger.alert-dismissible.fade.show(role='alert')
-    span.font-weight-bold #{error}
-    button.close(type='button' data-dismiss='alert' aria-label='Close')
-      span(aria-hidden=true) &times;
+  h3(style='color: red;')= error

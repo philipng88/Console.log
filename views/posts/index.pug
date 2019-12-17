@@ -1,14 +1,22 @@
-extends ../layout.pug
+extends ../layout
 block content
-  h1 Posts Index
-  each post in posts 
-    .card.w-50
-      a.h3.card-header(href=`/posts/${post.id}`) #{post.title}
-      .card-body
-        p Price: $#{post.price}
-        if post.description !== ''
-          p= post.description
-        else 
-          p.font-italic No description provided...
-        p= post.location
-
+  .container
+    h1 Posts Index
+    table.u-full-width
+      thead
+        tr
+          th Title
+          th Price
+          th Description
+          th Location
+      tbody
+        each post in posts
+          tr
+            td
+              a(href=`/posts/${post.id}`) #{post.title}
+            td $#{post.price}
+            if post.description !== ''
+              td= post.description
+            else 
+              td No description provided...
+            td= post.location

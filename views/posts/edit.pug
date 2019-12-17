@@ -1,32 +1,24 @@
-extends ../layout.pug
+extends ../layout
 block content
   .container
     h1 Edit Post: #{post.title}
     form#postEditForm(action=`/posts/${post.id}?_method=PUT` method='POST' enctype='multipart/form-data')
-      .form-group
-        input.form-control(type='text' name='post[title]' placeholder='Title' value=`${post.title}` required)
-      .form-group
-        .input-group
-          .input-group-prepend
-            span.input-group-text
-              i.fas.fa-dollar-sign
-          input.form-control(type='text' name='post[price]' placeholder='Price' value=`${post.price}` required)
-      .form-group
-        .custom-file
-          input#imageUpload.custom-file-input(type='file' accept='images/*' name='images' multiple)
-          label.custom-file-label(for='imageUpload') Choose file(s)
+      input.u-full-width(type='text' name='post[title]' placeholder='Title' value=`${post.title}` required)
+      input.u-full-width(type='text' name='post[price]' placeholder='Price' value=`${post.price}` required)
+      input#imageUpload(type='file' accept='images/*' name='images' multiple)
       div
         each image, index in post.images
           img(src=`${image.url}` width='100px')
-          input.imageDeleteCheckbox(type='checkbox' id=`image${index}` value=`${image.public_id}` name='deleteImages[]')
-          label(for=`image${index}`) Delete
-      .form-group
-        textarea.form-control(name='post[description]' placeholder='Description') #{post.description}
-      .form-group
-        input.form-control(type='text' name='post[location]' placeholder='Location' value=`${post.location}` required)
-      button.btn.btn-primary(type='submit')
+          label(for=`image${index}`)  
+            input.imageDeleteCheckbox(type='checkbox' id=`image${index}` value=`${image.public_id}` name='deleteImages[]')
+            span.label-body Delete
+      textarea.u-full-width(name='post[description]' placeholder='Description') #{post.description}
+      input.u-full-width(type='text' name='post[location]' placeholder='Location' value=`${post.location}` required)
+      a.button(href=`/posts/${post.id}`)
+        i.fas.fa-ban
+        |   Cancel 
+      button.button-primary(type='submit')
         i.fas.fa-save
-        |   Save  
+        |   Save 
 block append scripts
-  script(src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js')
   script(src='/js/post-edit.js')

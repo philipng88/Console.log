@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Review = require('./review');
 
 const Schema = mongoose.Schema;
 
@@ -19,6 +20,10 @@ const postSchema = new Schema({
       ref: 'Review'
     }
   ]
+});
+
+postSchema.pre('remove', async function() {
+  await Review.remove({ _id: { $in: this.reviews } });
 });
 
 module.exports = mongoose.model('Post', postSchema);
