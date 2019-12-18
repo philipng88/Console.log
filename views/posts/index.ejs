@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Console.log | <%= pageTitle %></title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css' integrity='sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY=' crossorigin='anonymous'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css' integrity='sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=' crossorigin='anonymous'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins&display=swap'>
+  <link rel='stylesheet' href='/css/navbar.css'>
+  <link rel='stylesheet' href='/css/style.css'>
+</head>
+<body>
+  <%- include('../includes/navbar.ejs') %>
+  <%- include('../includes/flash-messages.ejs') %>
+  <div class="container">
+    <h1>Posts Index</h1>
+    <%- include('../includes/pagination.ejs') %>
+    <table class="u-full-width">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% posts.docs.forEach(post => { %>
+          <tr>
+            <td><a href='/posts/<%= post.id %>'><%= post.title %></a></td>
+            <td>$<%= post.price %></td>
+            <% if (post.description !== '') { %>
+              <td><%= post.description %></td>
+            <% } else { %>
+              <td>No description provided...</td>
+            <% } %>
+            <td><%= post.location %></td>  
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <%- include('../includes/pagination.ejs') %>
+  </div>
+  <script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>
+  <script src='/js/navbar.js'></script>
+</body>
+</html>

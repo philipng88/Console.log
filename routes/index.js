@@ -5,7 +5,7 @@ const { asyncErrorHandler } = require('../middleware');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Console.log', pageTitle: 'Home' });
+  res.render('index.pug', { title: 'Console.log', pageTitle: 'Home' });
 });
 
 router.get('/register', (req, res, next) => {

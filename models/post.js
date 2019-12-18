@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 const Review = require('./review');
 
 const Schema = mongoose.Schema;
@@ -25,5 +26,7 @@ const postSchema = new Schema({
 postSchema.pre('remove', async function() {
   await Review.remove({ _id: { $in: this.reviews } });
 });
+
+postSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Post', postSchema);

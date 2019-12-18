@@ -14,12 +14,19 @@ cloudinary.config({
 
 module.exports = {
   async postIndex(req, res, next) {
-    const posts = await Post.find({});
-    res.render('posts/index', { posts, pageTitle: 'Posts' });
+    const posts = await Post.paginate(
+      {},
+      {
+        page: req.query.page || 1,
+        limit: 10
+      }
+    );
+    posts.page = Number(posts.page);
+    res.render('posts/index.ejs', { posts, pageTitle: 'Posts' });
   },
 
   postNew(req, res, next) {
-    res.render('posts/new', { pageTitle: 'Create New Post' });
+    res.render('posts/new.pug', { pageTitle: 'Create New Post' });
   },
 
   async postCreate(req, res, next) {
@@ -62,12 +69,12 @@ module.exports = {
         model: 'User'
       }
     });
-    res.render('posts/show', { post, pageTitle: post.title });
+    res.render('posts/show.pug', { post, pageTitle: post.title });
   },
 
   async postEdit(req, res, next) {
     const post = await Post.findById(req.params.id);
-    res.render('posts/edit', { post, pageTitle: 'Edit Post' });
+    res.render('posts/edit.pug', { post, pageTitle: 'Edit Post' });
   },
 
   async postUpdate(req, res, next) {
