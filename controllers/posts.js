@@ -4,7 +4,8 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const cloudinary = require('cloudinary');
 const Post = require('../models/post');
 
-const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,11 +19,16 @@ module.exports = {
       {},
       {
         page: req.query.page || 1,
-        limit: 10
+        limit: 10,
+        sort: '-_id'
       }
     );
     posts.page = Number(posts.page);
-    res.render('posts/index', { posts, pageTitle: 'Posts' });
+    res.render('posts/index', {
+      posts,
+      mapBoxToken,
+      pageTitle: 'Posts'
+    });
   },
 
   postNew(req, res, next) {
@@ -53,9 +59,10 @@ module.exports = {
         countries: ['us']
       })
       .send();
-    req.body.post.coordinates =
-      mapboxResponse.body.features[0].geometry.coordinates;
-    const post = await Post.create(req.body.post);
+    req.body.post.geometry = mapboxResponse.body.features[0].geometry;
+    const post = new Post(req.body.post);
+    post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p>`;
+    await post.save();
     req.session.success = 'Post created successfully!';
     res.redirect(`/posts/${post.id}`);
   },
@@ -70,7 +77,12 @@ module.exports = {
       }
     });
     const floorRating = post.calculateAvgRating();
-    res.render('posts/show', { post, pageTitle: post.title, floorRating });
+    res.render('posts/show', {
+      post,
+      mapBoxToken,
+      pageTitle: post.title,
+      floorRating
+    });
   },
 
   async postEdit(req, res, next) {
@@ -122,15 +134,16 @@ module.exports = {
           countries: ['us']
         })
         .send();
-      post.coordinates = mapboxResponse.body.features[0].geometry.coordinates;
+      post.geometry = mapboxResponse.body.features[0].geometry;
       post.location = req.body.post.location;
     }
 
     post.title = req.body.post.title;
     post.description = req.body.post.description;
     post.price = req.body.post.price;
-    post.save();
-
+    post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p>`;
+    await post.save();
+    req.session.success = 'Post updated';
     res.redirect(`/posts/${post.id}`);
   },
 

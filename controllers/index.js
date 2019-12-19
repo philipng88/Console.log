@@ -1,7 +1,20 @@
 const passport = require('passport');
 const User = require('../models/user');
+const Post = require('../models/post');
+
+const mapBoxToken = process.env.MAPBOX_TOKEN;
 
 module.exports = {
+  async landingPage(req, res, next) {
+    const posts = await Post.find({});
+    res.render('index', {
+      posts,
+      title: 'Console.log',
+      pageTitle: 'Home',
+      mapBoxToken
+    });
+  },
+
   async postRegister(req, res, next) {
     const newUser = new User({
       username: req.body.username,

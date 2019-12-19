@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
   <h1>Posts Index</h1>
+  <div id="map"></div>
   <%- include('../includes/pagination') %>
   <table class="u-full-width">
     <thead>
@@ -28,3 +29,8 @@
   </table>
   <%- include('../includes/pagination') %>
 </div>
+<script>
+  mapboxgl.accessToken = "<%= mapBoxToken %>";
+  const posts = { features: <%- JSON.stringify(posts.docs) %> }; 
+</script>
+<script src="/js/allPostsClusterMap.js"></script>

@@ -1,12 +1,15 @@
 const express = require('express');
-const { postRegister, postLogin, getLogout } = require('../controllers');
+const {
+  landingPage,
+  postRegister,
+  postLogin,
+  getLogout
+} = require('../controllers');
 const { asyncErrorHandler } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Console.log', pageTitle: 'Home' });
-});
+router.get('/', asyncErrorHandler(landingPage));
 
 router.get('/register', (req, res, next) => {
   res.send('Register page');

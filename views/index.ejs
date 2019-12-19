@@ -1,4 +1,10 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
   <h1>Home page</h1>
+  <div id="map"></div>
 </div>
+<script>
+  mapboxgl.accessToken = "<%= mapBoxToken %>";
+  const posts = { features: <%- JSON.stringify(posts) %> }; 
+</script>
+<script src="/js/allPostsClusterMap.js"></script>

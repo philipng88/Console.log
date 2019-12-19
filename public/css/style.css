@@ -9,3 +9,13 @@ body {
 .fas.fa-star-half-alt {
   color: gold;
 }
+
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
