@@ -1,8 +1,9 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-await-in-loop */
 const faker = require('faker');
 const Post = require('./models/post');
+// const cities = require('./cities');
 
 async function seedPosts() {
   await Post.deleteMany({});

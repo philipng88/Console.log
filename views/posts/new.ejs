@@ -1,0 +1,12 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+  <h1>Create New Post</h1>
+  <form action="/posts" method="POST" enctype="multipart/form-data">
+    <input type="text" class="u-full-width" name="post[title]" placeholder="Title" required>
+    <input class="u-full-width" type='text' name='post[price]' placeholder='Price' required>
+    <input type='file' accept='images/*' name='images' multiple>
+    <textarea class="u-full-width" name='post[description]' placeholder='Description'></textarea>
+    <input class="u-full-width" type='text' name='post[location]' placeholder='Location' required>
+    <input type="submit" value="Submit" class="button-primary">
+  </form>
+</div>

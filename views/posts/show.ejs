@@ -1,0 +1,96 @@
+<% layout('layouts/post-show-layout') -%>
+<div class="container">
+	<h1><%= post.title %></h1>
+	<p><strong>Price: </strong>$<%= post.price %></p>
+	<% if (post.description !== '') { %>
+    <p><strong>Description: </strong><%= post.description %></p>
+  <% } else { %>
+    <p>No description provided...</p>
+  <% } %>
+	<p><strong>Location: </strong><%= post.location %></p>
+	
+	<div>
+		<% if (floorRating !== 0) { %>
+			<% for(let i = 0; i < 5; i++) { %>
+				<% if(i < floorRating) { %>
+					<i class="fas fa-star"></i>
+				<% } else if((post.avgRating - i) > 0 && (post.avgRating - i) < 1) { %>
+					<i class="fas fa-star-half-alt"></i>
+				<% } else { %>
+					<i class="far fa-star"></i>
+				<% } %>
+			<% } %>
+		<% } else { %>
+			<p>No rating</p>
+		<% } %>
+	</div>
+	
+	<div>
+		<% if (post.images.length) { %>
+			<% post.images.forEach(image => { %>
+				<img src="<%= image.url %>" alt="Product image">
+			<% }); %>
+		<% } else { %>
+			<p>No photos provided...</p>
+		<% } %>
+	</div>
+	<div id='map'></div>
+	<div>
+		<a href="/posts/<%= post.id %>/edit">
+			<button>Edit</button>
+		</a>
+	</div>
+	<div>
+		<form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
+			<input type="submit" value="Delete">
+		</form>
+	</div>
+
+	<h2>Create a Review</h2>
+	<form action="/posts/<%= post.id %>/reviews" method="POST">
+		<textarea class="u-full-width" name="review[body]" placeholder="Leave a review" required></textarea>
+		<%- include('../includes/rating-select') %>
+		<button class="button-primary" type="submit">Submit</button>
+	</form>
+
+	<h3>Reviews</h3>
+	<% if (post.reviews.length) { %>
+		<% post.reviews.forEach(review => { %>
+			<div>
+				Author: <%= review.author.username %><br>
+				<%= review.body %><br>
+				<% if (review.rating === 5) { %>
+					<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+				<% } else if (review.rating === 4) { %>
+					<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+				<% } else if (review.rating === 3) { %>
+					<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+				<% } else if (review.rating === 2) { %>
+					<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+				<% } else if (review.rating === 1) { %>
+					<i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+				<% } else { %>
+					<p>No rating...</p>
+				<% } %>
+			</div>
+
+			<% if(review.author.equals(currentUser._id)) { %>
+			<div>
+				<button class="toggle-edit-form">Edit</button>
+
+				<form action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=PUT" method="POST" class="edit-review-form">
+					<textarea name="review[body]" required><%= review.body %></textarea>
+					<%- include('../includes/rating-select') %>
+					<button class="button-primary" type="submit"><i class="fas fa-save"></i> Save</button>
+				</form>
+				<form action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=DELETE" method="POST">
+					<button type="submit">Delete</button>
+				</form>
+			</div>
+			<% } %>
+			<hr>
+		<% }); %>
+	<% } else { %>
+		<p>No reviews yet...</p>
+	<% } %>
+</div>

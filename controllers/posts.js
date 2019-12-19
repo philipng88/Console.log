@@ -22,11 +22,11 @@ module.exports = {
       }
     );
     posts.page = Number(posts.page);
-    res.render('posts/index.ejs', { posts, pageTitle: 'Posts' });
+    res.render('posts/index', { posts, pageTitle: 'Posts' });
   },
 
   postNew(req, res, next) {
-    res.render('posts/new.pug', { pageTitle: 'Create New Post' });
+    res.render('posts/new', { pageTitle: 'Create New Post' });
   },
 
   async postCreate(req, res, next) {
@@ -69,12 +69,13 @@ module.exports = {
         model: 'User'
       }
     });
-    res.render('posts/show.pug', { post, pageTitle: post.title });
+    const floorRating = post.calculateAvgRating();
+    res.render('posts/show', { post, pageTitle: post.title, floorRating });
   },
 
   async postEdit(req, res, next) {
     const post = await Post.findById(req.params.id);
-    res.render('posts/edit.pug', { post, pageTitle: 'Edit Post' });
+    res.render('posts/edit', { post, pageTitle: 'Edit Post' });
   },
 
   async postUpdate(req, res, next) {
@@ -140,7 +141,7 @@ module.exports = {
         console.log(result, error);
       });
     }
-    await post.remove();
+    await post.deleteMany();
     req.session.success = 'Post deleted';
     res.redirect('/posts');
   }

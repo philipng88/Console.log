@@ -5,6 +5,7 @@ body {
 }
 
 .fas.fa-star,
-.far.fa-star {
+.far.fa-star,
+.fas.fa-star-half-alt {
   color: gold;
 }

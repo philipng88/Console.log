@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const engine = require('ejs-mate');
 const favicon = require('serve-favicon');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -36,8 +37,8 @@ mongoose.connection.on('connected', () =>
 mongoose.connection.on('error', err => console.log(err));
 
 // view engine setup
+app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -65,12 +66,13 @@ passport.deserializeUser(User.deserializeUser());
 
 // Set local variables
 app.use((req, res, next) => {
-  // Set default user for development
   req.user = {
-    // eslint-disable-next-line prettier/prettier
     _id: '5df8452df54e022b44d9fe2f',
-    // eslint-disable-next-line prettier/prettier
     username: 'Homer'
+    // _id: '5df93f6c998bb51a04cc1b9a',
+    // username: 'Bart'
+    // _id: '5df9b230ef811f34ec7a90e9',
+    // username: 'Apu'
   };
   res.locals.currentUser = req.user;
   // Set success flash message
