@@ -18,7 +18,9 @@
     <div class="nes-field">
       <label for="price_field">Price</label>
       <input 
-        type="text" 
+        type="number",
+        min="0",
+        step="1" 
         class="nes-input" 
         name="post[price]" 
         placeholder="Price" 
@@ -58,9 +60,7 @@
         id="description_area"
         class="nes-textarea" 
         name="post[description]" 
-        placeholder="Description"
-      ><%= post.description  %>
-      </textarea>
+        placeholder="Description"><%= post.description  %></textarea>
     </div>
     <br>
     <div class="nes-field">

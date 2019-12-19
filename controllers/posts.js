@@ -1,17 +1,11 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const cloudinary = require('cloudinary');
+const { cloudinary } = require('../cloudinary');
 const Post = require('../models/post');
 
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 module.exports = {
   async postIndex(req, res, next) {
@@ -38,18 +32,9 @@ module.exports = {
   async postCreate(req, res, next) {
     req.body.post.images = [];
     for (const file of req.files) {
-      const image = await cloudinary.v2.uploader.upload(
-        file.path,
-        {
-          folder: 'ConsoleLog/PostImages',
-          width: 200,
-          quality: 'auto:best'
-        },
-        (error, result) => console.log(result, error)
-      );
       req.body.post.images.push({
-        url: image.secure_url,
-        public_id: image.public_id
+        url: file.secure_url,
+        public_id: file.public_id
       });
     }
     const mapboxResponse = await geocodingClient
@@ -110,18 +95,9 @@ module.exports = {
 
     if (req.files) {
       for (const file of req.files) {
-        const image = await cloudinary.v2.uploader.upload(
-          file.path,
-          {
-            folder: 'ConsoleLog/PostImages',
-            width: 200,
-            quality: 'auto:best'
-          },
-          (error, result) => console.log(result, error)
-        );
         post.images.push({
-          url: image.secure_url,
-          public_id: image.public_id
+          url: file.secure_url,
+          public_id: file.public_id
         });
       }
     }
@@ -154,7 +130,7 @@ module.exports = {
         console.log(result, error);
       });
     }
-    await post.deleteMany();
+    await post.remove();
     req.session.success = 'Post deleted';
     res.redirect('/posts');
   }
