@@ -3,30 +3,32 @@
   <h1>Posts Index</h1>
   <div id="map"></div>
   <%- include('../includes/pagination') %>
-  <table class="u-full-width">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Location</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% posts.docs.forEach(post => { %>
+  <div class="nes-table-responsive">
+    <table class="nes-table">
+      <thead>
         <tr>
-          <td><a href='/posts/<%= post.id %>'><%= post.title %></a></td>
-          <td>$<%= post.price %></td>
-          <% if (post.description !== '') { %>
-            <td><%= post.description %></td>
-          <% } else { %>
-            <td>No description provided...</td>
-          <% } %>
-          <td><%= post.location %></td>  
+          <th>Title</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Location</th>
         </tr>
-      <% }); %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% posts.docs.forEach(post => { %>
+          <tr>
+            <td><a href='/posts/<%= post.id %>'><%= post.title %></a></td>
+            <td>$<%= post.price %></td>
+            <% if (post.description !== '') { %>
+              <td><%= post.description %></td>
+            <% } else { %>
+              <td>No description provided...</td>
+            <% } %>
+            <td><%= post.location %></td>  
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
   <%- include('../includes/pagination') %>
 </div>
 <script>

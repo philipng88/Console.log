@@ -2,22 +2,81 @@
 <div class="container">
   <h1>Edit Post: <%= post.title %></h1>
   <form action="/posts/<%= post.id %>?_method=PUT" id="postEditForm" method="POST" enctype="multipart/form-data">
-    <input type="text" class="u-full-width" name="post[title]" placeholder="Title" value="<%= post.title %>" required>
-    <input type="text" class="u-full-width" name="post[price]" placeholder="Price" value="<%= post.price %>" required>
-    <input type="file" name="images" id="imageUpload" accept="images/*" multiple>
+    <div class="nes-field">
+      <label for="title_field">Title</label>
+      <input 
+        type="text" 
+        class="nes-input" 
+        name="post[title]" 
+        placeholder="Title" 
+        id="title_field" 
+        value="<%= post.title %>" 
+        required
+      >
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="price_field">Price</label>
+      <input 
+        type="text" 
+        class="nes-input" 
+        name="post[price]" 
+        placeholder="Price" 
+        id="price_field" 
+        value="<%= post.price %>" 
+        required
+      >
+    </div>
+    <br>
+    <input 
+      type="file" 
+      name="images" 
+      id="imageUpload" 
+      accept="images/*" 
+      multiple
+    >
+    <br>
     <div>
       <% post.images.forEach((image, index) => { %>
         <img src="<%= image.url %>" width="100px" />
         <label for="image<%= index %>">
-          <input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%= index %>" value="<%= image.public_id %>">
-          <span class="label-body">Delete</span>
+          <input 
+            type="checkbox" 
+            name="deleteImages[]" 
+            class="imageDeleteCheckbox nes-checkbox" 
+            id="image<%= index %>" 
+            value="<%= image.public_id %>"
+          >
+          <span>Delete</span>
         </label>
       <% }); %>  
     </div>
-    <textarea class="u-full-width" name="post[description]" placeholder="Description"><%= post.description  %></textarea>
-    <input class="u-full-width" type="text" name="post[location]" placeholder="Location" value="<%= post.location  %>">
-    <a href="/posts/<%= post.id %>" class="button">Cancel</a>
-    <button class="button-primary" type="submit"><i class="fas fa-save"></i> Save</button>
+    <br>
+    <div class="nes-field">
+      <label for="description_area">Description</label>
+      <textarea 
+        id="description_area"
+        class="nes-textarea" 
+        name="post[description]" 
+        placeholder="Description"
+      ><%= post.description  %>
+      </textarea>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="location_field">Location</label>
+      <input
+        id="location_field"
+        class="nes-input" 
+        type="text" 
+        name="post[location]" 
+        placeholder="Location" 
+        value="<%= post.location  %>"
+      >  
+    </div>
+    <br>
+    <a href="/posts/<%= post.id %>" class="nes-btn is-error">Cancel</a>
+    <button class="nes-btn is-primary" type="submit">Save</button>
   </form>
 </div>
 <script src="/js/post-edit.js"></script>

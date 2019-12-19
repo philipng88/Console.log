@@ -1,12 +1,47 @@
-<% layout('layouts/boilerplate') -%>
+<% layout("layouts/boilerplate") -%>
 <div class="container">
   <h1>Create New Post</h1>
   <form action="/posts" method="POST" enctype="multipart/form-data">
-    <input type="text" class="u-full-width" name="post[title]" placeholder="Title" required>
-    <input class="u-full-width" type='text' name='post[price]' placeholder='Price' required>
-    <input type='file' accept='images/*' name='images' multiple>
-    <textarea class="u-full-width" name='post[description]' placeholder='Description'></textarea>
-    <input class="u-full-width" type='text' name='post[location]' placeholder='Location' required>
-    <input type="submit" value="Submit" class="button-primary">
+    <div class="nes-field">
+      <label for="title_field">Title</label>
+      <input 
+        type="text"
+        id="title_field" 
+        class="nes-input" 
+        name="post[title]" 
+        required
+      >
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="price_field">Price</label>
+      <input
+        id="price_field" 
+        class="nes-input" 
+        type="text" 
+        name="post[price]" 
+        required
+      >
+    </div>
+    <br>
+    <input type="file" accept="images/*" name="images" multiple>
+    <br><br>
+    <div class="nes-field">
+      <label for="description_area">Description</label>
+      <textarea id="description_area" class="nes-textarea" name="post[description]"></textarea>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="location_field">Location</label>
+      <input 
+        id="location_field"
+        class="nes-input" 
+        type="text" 
+        name="post[location]" 
+        required
+      >
+    </div>
+    <br>
+    <input type="submit" value="Submit" class="nes-btn is-primary">
   </form>
 </div>

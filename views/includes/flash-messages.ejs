@@ -1,8 +1,12 @@
 <% if (success && success.length) { %>
-  <h3 style='color: green;'><%= success %></h3>
+  <div class="nes-container is-rounded">
+    <p class="nes-text is-success"><%= success %></p>
+  </div>
 <% } %>
 
 <% if (error && error.length) { %>
-  <h3 style='color: red;'><%= error %></h3>
+  <div class="nes-container is-rounded">
+    <p class="nes-text is-error"><%= error %></p>
+  </div>
 <% } %>
 
