@@ -36,21 +36,28 @@
 		<% } %>
 	</div>
 	<div id='map'></div>
-	<div>
-		<a href="/posts/<%= post.id %>/edit" class="nes-btn">Edit</a>
-		<form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
-			<button type="submit" class="nes-btn is-error">Delete</button>
+	<% if (currentUser && post.author.equals(currentUser._id)) { %>
+		<div>
+			<a href="/posts/<%= post.id %>/edit" class="nes-btn">Edit</a>
+			<form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
+				<button type="submit" class="nes-btn is-error">Delete</button>
+			</form>
+		</div>
+	<% } %>
+	<br>
+	<% if (currentUser) { %>
+		<h2>Create a Review</h2>
+		<form action="/posts/<%= post.id %>/reviews" method="POST">
+			<textarea class="nes-textarea" name="review[body]" placeholder="Leave a review" required></textarea>
+			<%- include('../includes/rating-select') %>
+			<br>
+			<button class="nes-btn is-primary" type="submit">Submit</button>
 		</form>
-	</div>
-	<br>
-	<h2>Create a Review</h2>
-	<form action="/posts/<%= post.id %>/reviews" method="POST">
-		<textarea class="nes-textarea" name="review[body]" placeholder="Leave a review" required></textarea>
-		<%- include('../includes/rating-select') %>
 		<br>
-		<button class="nes-btn is-primary" type="submit">Submit</button>
-	</form>
-	<br>
+	<% } else { %>
+		<h2><a class="nes-btn is-primary" href="/login?returnTo=true">Create a Review</a></h2>
+		<br>
+	<% } %>
 	<h2>Reviews</h2>
 	<% if (post.reviews.length) { %>
 		<% post.reviews.forEach(review => { %>
@@ -72,7 +79,7 @@
 				<% } %>
 			</div>
 
-			<% if(review.author.equals(currentUser._id)) { %>
+			<% if(currentUser && review.author.equals(currentUser._id)) { %>
 			<div>
 				<button class="toggle-edit-form nes-btn">Edit</button>
 				<form action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=PUT" method="POST" class="edit-review-form">

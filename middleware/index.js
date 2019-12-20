@@ -1,9 +1,11 @@
 const Review = require('../models/review');
+const Post = require('../models/post');
 
 module.exports = {
   asyncErrorHandler: fn => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   },
+
   isReviewAuthor: async (req, res, next) => {
     const review = await Review.findById(req.params.review_id);
     if (review.author.equals(req.user._id)) {
@@ -11,5 +13,22 @@ module.exports = {
     }
     req.session.error = 'Invalid user permissions';
     return res.redirect('/');
+  },
+
+  isLoggedIn: (req, res, next) => {
+    if (req.isAuthenticated()) return next();
+    req.session.error = 'Please log in';
+    req.session.redirectTo = req.originalUrl;
+    res.redirect('/login');
+  },
+
+  isAuthor: async (req, res, next) => {
+    const post = await Post.findById(req.params.id);
+    if (post.author.equals(req.user._id)) {
+      res.locals.post = post;
+      return next();
+    }
+    req.session.error = 'Invalid user permissions';
+    res.redirect('back');
   }
 };

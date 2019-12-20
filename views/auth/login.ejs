@@ -1,0 +1,18 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+  <h1>Login</h1>
+  <br>
+  <form action="/login" method="POST">
+    <div class="nes-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" class="nes-input" name="username" required>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="nes-input" required>
+    </div>
+    <br>
+    <button type="submit" class="nes-btn is-primary">Login</button>
+  </form>
+</div>

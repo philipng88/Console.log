@@ -66,20 +66,9 @@ passport.deserializeUser(User.deserializeUser());
 
 // Set local variables
 app.use((req, res, next) => {
-  req.user = {
-    _id: '5df8452df54e022b44d9fe2f',
-    username: 'Homer'
-    // _id: '5df93f6c998bb51a04cc1b9a',
-    // username: 'Bart'
-    // _id: '5df9b230ef811f34ec7a90e9',
-    // username: 'Apu'
-  };
   res.locals.currentUser = req.user;
-  // Set success flash message
   res.locals.success = req.session.success || '';
   delete req.session.success;
-
-  // Set error flash message
   res.locals.error = req.session.error || '';
   delete req.session.error;
   next();

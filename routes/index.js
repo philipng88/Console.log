@@ -3,6 +3,8 @@ const {
   landingPage,
   postRegister,
   postLogin,
+  getLogin,
+  getRegister,
   getLogout
 } = require('../controllers');
 const { asyncErrorHandler } = require('../middleware');
@@ -10,18 +12,10 @@ const { asyncErrorHandler } = require('../middleware');
 const router = express.Router();
 
 router.get('/', asyncErrorHandler(landingPage));
-
-router.get('/register', (req, res, next) => {
-  res.send('Register page');
-});
-
+router.get('/register', getRegister);
 router.post('/register', asyncErrorHandler(postRegister));
-
-router.get('/login', (req, res, next) => {
-  res.send('Login page');
-});
-
-router.post('/login', postLogin);
+router.get('/login', getLogin);
+router.post('/login', asyncErrorHandler(postLogin));
 router.get('/logout', getLogout);
 
 router.get('/profile', (req, res, next) => {

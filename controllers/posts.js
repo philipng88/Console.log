@@ -45,6 +45,7 @@ module.exports = {
       })
       .send();
     req.body.post.geometry = mapboxResponse.body.features[0].geometry;
+    req.body.post.author = req.user._id;
     const post = new Post(req.body.post);
     post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p>`;
     await post.save();
@@ -70,13 +71,12 @@ module.exports = {
     });
   },
 
-  async postEdit(req, res, next) {
-    const post = await Post.findById(req.params.id);
-    res.render('posts/edit', { post, pageTitle: 'Edit Post' });
+  postEdit(req, res, next) {
+    res.render('posts/edit', { pageTitle: 'Edit Post' });
   },
 
   async postUpdate(req, res, next) {
-    const post = await Post.findById(req.params.id);
+    const { post } = res.locals;
 
     if (req.body.deleteImages && req.body.deleteImages.length) {
       const deleteImages = req.body.deleteImages;
@@ -124,7 +124,7 @@ module.exports = {
   },
 
   async postDelete(req, res, next) {
-    const post = await Post.findById(req.params.id);
+    const { post } = res.locals;
     for (const image of post.images) {
       await cloudinary.v2.uploader.destroy(image.public_id, (error, result) => {
         console.log(result, error);

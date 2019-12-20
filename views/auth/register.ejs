@@ -1,0 +1,28 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+  <h1>Register</h1>
+  <br>
+  <form action="/register" method="POST">
+    <div class="nes-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" class="nes-input" name="username" value="<%= username %>" required>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="nes-input" required>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="nes-input" value="<%= email %>" required>
+    </div>
+    <br>
+    <div>
+      <label for="image">Profile Image</label><br>
+      <input type="file" name="image" id="image">
+    </div>
+    <br><br>
+    <button type="submit" class="nes-btn is-primary">Submit</button>
+  </form>
+</div>
