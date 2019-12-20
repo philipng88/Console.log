@@ -1,4 +1,8 @@
 const express = require('express');
+const multer = require('multer');
+const { storage } = require('../cloudinary/profileImage');
+
+const upload = multer({ storage });
 const {
   landingPage,
   postRegister,
@@ -20,7 +24,11 @@ const router = express.Router();
 
 router.get('/', asyncErrorHandler(landingPage));
 router.get('/register', getRegister);
-router.post('/register', asyncErrorHandler(postRegister));
+router.post(
+  '/register',
+  upload.single('image'),
+  asyncErrorHandler(postRegister),
+);
 router.get('/login', getLogin);
 router.post('/login', asyncErrorHandler(postLogin));
 router.get('/logout', getLogout);
@@ -28,6 +36,7 @@ router.get('/profile', isLoggedIn, asyncErrorHandler(getProfile));
 router.put(
   '/profile',
   isLoggedIn,
+  upload.single('image'),
   asyncErrorHandler(isValidPassword),
   asyncErrorHandler(changePassword),
   asyncErrorHandler(updateProfile),

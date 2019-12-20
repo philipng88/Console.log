@@ -1,6 +1,9 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
-  <h1><%= currentUser.username%>'s Profile</h1>
+  <h1>
+    <img class="profile-image" src="<%= currentUser.image.secure_url %>" alt="<%= currentUser.username %>'s Profile Image">
+    <%= currentUser.username%>'s Profile
+  </h1>
   <h3>Recent Posts:</h3>
   <div class="lists">
     <% posts.forEach(post => { %>
@@ -10,7 +13,7 @@
     <% }); %>
   </div>
   <h3>Update Info:</h3>
-  <form action="/profile?_method=PUT" method="POST">
+  <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data">
     <div class="nes-field">
       <label for="username">Username</label>
       <input 
@@ -70,7 +73,7 @@
         name="passwordConfirmation"
       >  
     </div>
-    <div id="validation-message"></div>
+    <div id="validation-message" class="nes-text"></div>
     <br>
     <button 
       type="submit" 

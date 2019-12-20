@@ -27,12 +27,12 @@ confirmation.addEventListener('input', e => {
   newPasswordValue = newPassword.value;
   confirmationValue = confirmation.value;
   if (newPasswordValue !== confirmationValue) {
-    validatePasswords('Passwords do not match', 'color-red', 'color-green');
+    validatePasswords('Passwords do not match', 'is-error', 'is-success');
     inputFieldBorderColor('is-error', 'is-success');
     buttonChange('is-disabled', 'is-primary');
     submitButton.setAttribute('disabled', true);
   } else {
-    validatePasswords('Passwords match', 'color-green', 'color-red');
+    validatePasswords('Passwords match', 'is-success', 'is-error');
     inputFieldBorderColor('is-success', 'is-error');
     buttonChange('is-primary', 'is-disabled');
     submitButton.removeAttribute('disabled');

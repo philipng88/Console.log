@@ -1,6 +1,10 @@
+/* eslint-disable camelcase */
 const util = require('util');
 const User = require('../models/user');
 const Post = require('../models/post');
+
+const { cloudinary } = require('../cloudinary/profileImage');
+const { deleteProfileImage } = require('../middleware');
 
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 
@@ -26,6 +30,10 @@ module.exports = {
 
   async postRegister(req, res, next) {
     try {
+      if (req.file) {
+        const { secure_url, public_id } = req.file;
+        req.body.image = { secure_url, public_id };
+      }
       const user = await User.register(new User(req.body), req.body.password);
       req.login(user, err => {
         if (err) return next(err);
@@ -33,6 +41,7 @@ module.exports = {
         res.redirect('/');
       });
     } catch (err) {
+      deleteProfileImage(req);
       const { username, email } = req.body;
       let error = err.message;
       if (
@@ -92,6 +101,12 @@ module.exports = {
     const { user } = res.locals;
     if (username) user.username = username;
     if (email) user.email = email;
+    if (req.file) {
+      if (user.image.public_id)
+        await cloudinary.v2.uploader.destroy(user.image.public_id);
+      const { secure_url, public_id } = req.file;
+      user.image = { secure_url, public_id };
+    }
     await user.save();
     const login = util.promisify(req.login.bind(req));
     await login(user);
