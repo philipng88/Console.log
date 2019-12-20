@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+  <h1>Reset Password</h1>
+  <form action="/reset/<%= token %>?_method=PUT" method="POST">
+    <div class="nes-field">
+      <label for="new-password">New Password</label>
+      <input type="password" id="new-password" name="password" class="nes-input" autofocus>
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="confirm-new-password">Confirm New Password</label>
+      <input type="password" id="confirm-new-password" name="confirm" class="nes-input">
+    </div>
+    <br>
+    <button type="submit" class="nes-btn is-primary">Submit</button>
+  </form>
+</div>

@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
 const util = require('util');
+const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail');
 const User = require('../models/user');
 const Post = require('../models/post');
 
@@ -7,6 +9,7 @@ const { cloudinary } = require('../cloudinary/profileImage');
 const { deleteProfileImage } = require('../middleware');
 
 const mapBoxToken = process.env.MAPBOX_TOKEN;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
   async landingPage(req, res, next) {
@@ -112,5 +115,81 @@ module.exports = {
     await login(user);
     req.session.success = 'Profile successfully updated';
     res.redirect('/profile');
+  },
+
+  getForgotPassword(req, res, next) {
+    res.render('auth/forgot', { pageTitle: 'Forgot Password?' });
+  },
+
+  async putForgotPassword(req, res, next) {
+    const token = await crypto.randomBytes(20).toString('hex');
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      req.session.error = 'There is no account associated with that email';
+      return res.redirect('/forgot-password');
+    }
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000;
+    await user.save();
+    const message = {
+      to: email,
+      from: 'Console.log Support <console.log_support@noreply>',
+      subject: 'Console.log - Forgot Password',
+      text: `Please use the following link to reset the password for your Console.log account: http://${req.headers.host}/reset/${token}`,
+    };
+    await sgMail.send(message);
+    req.session.success = `An email has been sent to ${email} with further instructions`;
+    res.redirect('/forgot-password');
+  },
+
+  async getResetPassword(req, res, next) {
+    const { token } = req.params;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+      req.session.error = 'Password reset token is invalid or has expired';
+      return res.redirect('/forgot-password');
+    }
+    res.render('auth/reset', { token, pageTitle: 'Reset Password' });
+  },
+
+  async putResetPassword(req, res, next) {
+    const { token } = req.params;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      req.session.error = 'Password reset token is invalid or has expired';
+      return res.redirect('/forgot-password');
+    }
+
+    if (req.body.password === req.body.confirm) {
+      await user.setPassword(req.body.password);
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
+      await user.save();
+      const login = util.promisify(req.login.bind(req));
+      await login(user);
+    } else {
+      req.session.error = 'Passwords do not match';
+      return res.redirect(`/reset/${token}`);
+    }
+
+    const message = {
+      to: user.email,
+      from: 'Console.log Support <console.log_support@noreply>',
+      subject: 'Console.log - Password reset confirmation',
+      text:
+        'This email is to confirm that the password for your Console.log account has been changed',
+    };
+
+    await sgMail.send(message);
+    req.session.success = 'Password successfully changed';
+    res.redirect('/');
   },
 };
