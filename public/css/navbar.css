@@ -1,11 +1,11 @@
-.navbar {
+#navbar {
   display: flex;
   justify-content: space-around;
   background-color: #5d4954;
   overflow: hidden;
 }
 
-.navbar a {
+#navbar a {
   color: #e2e2e2;
   padding: 14px 16px;
   text-decoration: none;
@@ -17,7 +17,7 @@
   -o-transition: .25s ease-in-out;
 }
 
-.navbar a:hover {
+#navbar a:hover {
   background-color: #e2e2e2;
   color: #5d4954;
 }

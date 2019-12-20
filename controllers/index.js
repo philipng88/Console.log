@@ -1,3 +1,4 @@
+const util = require('util');
 const User = require('../models/user');
 const Post = require('../models/post');
 
@@ -10,7 +11,7 @@ module.exports = {
       posts,
       title: 'Console.log',
       pageTitle: 'Home',
-      mapBoxToken
+      mapBoxToken,
     });
   },
 
@@ -19,7 +20,7 @@ module.exports = {
       title: 'Register',
       pageTitle: 'Register',
       username: '',
-      email: ''
+      email: '',
     });
   },
 
@@ -45,7 +46,7 @@ module.exports = {
         pageTitle: 'Register',
         username,
         email,
-        error
+        error,
       });
     }
   },
@@ -72,5 +73,29 @@ module.exports = {
   getLogout(req, res, next) {
     req.logout();
     res.redirect('/');
-  }
+  },
+
+  async getProfile(req, res, next) {
+    const posts = await Post.find()
+      .where('author')
+      .equals(req.user._id)
+      .limit(10)
+      .exec();
+    res.render('user/profile', {
+      posts,
+      pageTitle: 'Profile',
+    });
+  },
+
+  async updateProfile(req, res, next) {
+    const { username, email } = req.body;
+    const { user } = res.locals;
+    if (username) user.username = username;
+    if (email) user.email = email;
+    await user.save();
+    const login = util.promisify(req.login.bind(req));
+    await login(user);
+    req.session.success = 'Profile successfully updated';
+    res.redirect('/profile');
+  },
 };

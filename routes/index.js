@@ -5,9 +5,16 @@ const {
   postLogin,
   getLogin,
   getRegister,
-  getLogout
+  getLogout,
+  getProfile,
+  updateProfile,
 } = require('../controllers');
-const { asyncErrorHandler } = require('../middleware');
+const {
+  asyncErrorHandler,
+  isLoggedIn,
+  isValidPassword,
+  changePassword,
+} = require('../middleware');
 
 const router = express.Router();
 
@@ -17,14 +24,14 @@ router.post('/register', asyncErrorHandler(postRegister));
 router.get('/login', getLogin);
 router.post('/login', asyncErrorHandler(postLogin));
 router.get('/logout', getLogout);
-
-router.get('/profile', (req, res, next) => {
-  res.send('Profile page');
-});
-
-router.put('/profile/:user_id', (req, res, next) => {
-  res.send('Edit Profile');
-});
+router.get('/profile', isLoggedIn, asyncErrorHandler(getProfile));
+router.put(
+  '/profile',
+  isLoggedIn,
+  asyncErrorHandler(isValidPassword),
+  asyncErrorHandler(changePassword),
+  asyncErrorHandler(updateProfile),
+);
 
 router.get('/forgot', (req, res, next) => {
   res.send('Forgot password form');

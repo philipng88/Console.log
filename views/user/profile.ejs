@@ -1,0 +1,83 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+  <h1><%= currentUser.username%>'s Profile</h1>
+  <h3>Recent Posts:</h3>
+  <div class="lists">
+    <% posts.forEach(post => { %>
+      <ul class="nes-list is-disc">
+        <li><a href="/posts/<%= post.id %>"><%= post.title %></a></li>  
+      </ul>
+    <% }); %>
+  </div>
+  <h3>Update Info:</h3>
+  <form action="/profile?_method=PUT" method="POST">
+    <div class="nes-field">
+      <label for="username">Username</label>
+      <input 
+        type="text" 
+        id="username" 
+        class="nes-input" 
+        name="username" 
+        value="<%= currentUser.username %>" 
+        required
+      >  
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        class="nes-input" 
+        id="email" 
+        name="email"
+        value="<%= currentUser.email %>"
+      >  
+    </div>
+    <br>
+    <div>
+      <label for="image">Profile Image:</label>
+      <input type="file" id="image" name="image">  
+    </div>
+    <hr>
+    <h3>Change Password:</h3>
+    <div class="nes-field">
+      <label for="current-password">Current Password (required to update profile)</label>
+      <input 
+        type="password" 
+        class="nes-input" 
+        id="current-password" 
+        name="currentPassword"
+        required
+      >  
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="new-password">New Password</label>
+      <input 
+        type="password" 
+        class="nes-input" 
+        id="new-password" 
+        name="newPassword"
+      >  
+    </div>
+    <br>
+    <div class="nes-field">
+      <label for="password-confirmation">Confirm New Password</label>
+      <input 
+        type="password" 
+        class="nes-input" 
+        id="password-confirmation" 
+        name="passwordConfirmation"
+      >  
+    </div>
+    <div id="validation-message"></div>
+    <br>
+    <button 
+      type="submit" 
+      class="nes-btn is-primary" 
+      id="update-profile-submit-btn"
+    >Submit
+    </button>
+  </form>
+</div>
+<script src="/js/profile.js"></script>

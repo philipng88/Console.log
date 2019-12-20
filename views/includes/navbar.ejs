@@ -1,4 +1,4 @@
-<div class="navbar">
+<div id="navbar">
   <a href="/">Home</a>
   <a href="/posts">All Posts</a>
   <% if (!currentUser) { %>
@@ -6,7 +6,7 @@
     <a href="/login">Login</a>
   <% } else { %>
     <a href="/posts/new">Create Post</a>
-    <a href="/logout">Logout</a>
     <a href="/profile">Profile(<%= currentUser.username %>)</a>
+    <a href="/logout">Logout</a>
   <% } %>
 </div>

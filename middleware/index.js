@@ -1,5 +1,6 @@
 const Review = require('../models/review');
 const Post = require('../models/post');
+const User = require('../models/user');
 
 module.exports = {
   asyncErrorHandler: fn => (req, res, next) => {
@@ -30,5 +31,38 @@ module.exports = {
     }
     req.session.error = 'Invalid user permissions';
     res.redirect('back');
-  }
+  },
+
+  isValidPassword: async (req, res, next) => {
+    const { user } = await User.authenticate()(
+      req.user.username,
+      req.body.currentPassword,
+    );
+    if (user) {
+      res.locals.user = user;
+      next();
+    } else {
+      req.session.error = 'Incorrect current password';
+      return res.redirect('/profile');
+    }
+  },
+
+  changePassword: async (req, res, next) => {
+    const { newPassword, passwordConfirmation } = req.body;
+    if (newPassword && !passwordConfirmation) {
+      req.session.error = 'Missing password confirmation';
+      res.redirect('/profile');
+    } else if (newPassword && passwordConfirmation) {
+      const { user } = res.locals;
+      if (newPassword === passwordConfirmation) {
+        await user.setPassword(newPassword);
+        next();
+      } else {
+        req.session.error = 'Passwords do not match';
+        return res.redirect('/profile');
+      }
+    } else {
+      next();
+    }
+  },
 };
