@@ -9,15 +9,6 @@ a {
   text-decoration: none;
 }
 
-.container {
-  position: relative;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
 .fas.fa-star,
 .far.fa-star,
 .fas.fa-star-half-alt {
@@ -42,15 +33,6 @@ a {
   -o-border-radius: 50%;
 }
 
-@media (min-width: 400px) {
-  .container {
-    width: 85%;
-    padding: 0;
-  }
-}
-
-@media (min-width: 550px) {
-  .container {
-    width: 80%;
-  }
+.pagination-wrapper {
+  margin: 20px 0;
 }

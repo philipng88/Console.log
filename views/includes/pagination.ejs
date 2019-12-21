@@ -1,13 +1,15 @@
-<div style="margin: 20px 0;">
+<div class="pagination-wrapper">
   <% if (posts.prevPage) { %>
-    <a href="/posts?page=<%= posts.prevPage %>">Previous</a>
+    <a href="<%= paginateUrl %><%= posts.prevPage %>">Previous</a>
   <% } %>
-  <% for (let i = 1; i <= posts.totalPages; i++) { %>
-    <a href="/posts?page=<%= i %>" 
-      <%= i === posts.page ? 'style=color:#000;' : '' %> 
-    ><%= i %></a>
+  <% if (posts.pages > 1 && posts.docs.length) { %>
+    <% for (let i = 1; i <= posts.totalPages; i++) { %>
+      <a href="<%= paginateUrl %><%= i %>" 
+        <%= i === posts.page ? 'style=color:#000;' : '' %> 
+      ><%= i %></a>
+    <% } %>
   <% } %>
   <% if (posts.nextPage) { %>
-    <a href="/posts?page=<%= posts.nextPage %>">Next</a>
+    <a href="<%= paginateUrl %><%= posts.nextPage %>">Next</a>
   <% } %>
 </div>

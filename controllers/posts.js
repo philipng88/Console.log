@@ -9,19 +9,20 @@ const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports = {
   async postIndex(req, res, next) {
-    const posts = await Post.paginate(
-      {},
-      {
-        page: req.query.page || 1,
-        limit: 10,
-        sort: '-_id'
-      }
-    );
+    const { dbQuery } = res.locals;
+    delete res.locals.dbQuery;
+    const posts = await Post.paginate(dbQuery, {
+      page: req.query.page || 1,
+      limit: 10,
+      sort: '-_id',
+    });
     posts.page = Number(posts.page);
+    if (!posts.docs.length && res.locals.query)
+      res.locals.error = 'No results match that query';
     res.render('posts/index', {
       posts,
       mapBoxToken,
-      pageTitle: 'Posts'
+      pageTitle: 'Posts',
     });
   },
 
@@ -34,14 +35,14 @@ module.exports = {
     for (const file of req.files) {
       req.body.post.images.push({
         url: file.secure_url,
-        public_id: file.public_id
+        public_id: file.public_id,
       });
     }
     const mapboxResponse = await geocodingClient
       .forwardGeocode({
         query: req.body.post.location,
         limit: 1,
-        countries: ['us']
+        countries: ['us'],
       })
       .send();
     req.body.post.geometry = mapboxResponse.body.features[0].geometry;
@@ -59,15 +60,16 @@ module.exports = {
       options: { sort: { _id: -1 } },
       populate: {
         path: 'author',
-        model: 'User'
-      }
+        model: 'User',
+      },
     });
-    const floorRating = post.calculateAvgRating();
+    // const floorRating = post.calculateAvgRating();
+    const floorRating = post.avgRating;
     res.render('posts/show', {
       post,
       mapBoxToken,
       pageTitle: post.title,
-      floorRating
+      floorRating,
     });
   },
 
@@ -97,7 +99,7 @@ module.exports = {
       for (const file of req.files) {
         post.images.push({
           url: file.secure_url,
-          public_id: file.public_id
+          public_id: file.public_id,
         });
       }
     }
@@ -107,7 +109,7 @@ module.exports = {
         .forwardGeocode({
           query: req.body.post.location,
           limit: 1,
-          countries: ['us']
+          countries: ['us'],
         })
         .send();
       post.geometry = mapboxResponse.body.features[0].geometry;
@@ -133,5 +135,5 @@ module.exports = {
     await post.remove();
     req.session.success = 'Post deleted';
     res.redirect('/posts');
-  }
+  },
 };

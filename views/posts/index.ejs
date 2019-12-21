@@ -1,7 +1,14 @@
 <% layout('layouts/boilerplate') -%>
-<div class="container">
+<div style="padding: 15px;">
   <h1>Posts Index</h1>
-  <div id="map"></div>
+  <div class="row">
+    <div class="one-third column">
+      <%- include('../includes/searchFilter') %>
+    </div>
+    <div class="two-thirds column">
+      <div id="map"></div>
+    </div>
+  </div>
   <%- include('../includes/pagination') %>
   <div class="nes-table-responsive">
     <table class="nes-table">

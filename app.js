@@ -28,11 +28,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
   })
   .catch(error => console.log(error));
 mongoose.connection.on('connected', () =>
-  console.log('Database connection successful')
+  console.log('Database connection successful'),
 );
 mongoose.connection.on('error', err => console.log(err));
 
@@ -54,8 +54,8 @@ app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
-    saveUninitialized: true
-  })
+    saveUninitialized: true,
+  }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -87,10 +87,6 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  // res.locals.message = err.message;
-  // res.locals.error = req.app.get('env') === 'development' ? err : {};
-  // res.status(err.status || 500);
-  // res.render('error', { pageTitle: 'ERROR' });
   console.log(err);
   req.session.error = err.message;
   res.redirect('back');

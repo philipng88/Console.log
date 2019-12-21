@@ -14,27 +14,27 @@ const postSchema = new Schema({
     type: {
       type: String,
       enum: ['Point'],
-      required: true
+      required: true,
     },
     coordinates: {
       type: [Number],
-      required: true
-    }
+      required: true,
+    },
   },
   properties: {
-    description: String
+    description: String,
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   },
   reviews: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Review'
-    }
+      ref: 'Review',
+    },
   ],
-  avgRating: { type: Number, default: 0 }
+  avgRating: { type: Number, default: 0 },
 });
 
 postSchema.pre('remove', async function() {
@@ -57,5 +57,6 @@ postSchema.methods.calculateAvgRating = function() {
 };
 
 postSchema.plugin(mongoosePaginate);
+postSchema.index({ geometry: '2dsphere' });
 
 module.exports = mongoose.model('Post', postSchema);

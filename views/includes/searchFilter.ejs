@@ -1,0 +1,117 @@
+<form action="/posts" method="GET">
+  <fieldset>
+    <legend>Search</legend>
+    <div class="nes-field">
+      <input 
+        type="text" 
+        class="nes-input" 
+        id="search" 
+        name="search" 
+        placeholder="title, location, desc..."
+        value="<%= query.search %>"
+      >
+    </div>
+  </fieldset>
+  <br>
+  <fieldset>
+    <legend>Price</legend>
+    <div class="nes-field">
+      <label for="min">Min</label>
+      <input 
+        type="number" 
+        name="price[min]" 
+        id="min" 
+        min="0" 
+        max="5000" 
+        step="1"
+        value="<%= query.price ? query.price.min : '' %>"
+      >
+    </div>
+    <div class="nes-field">
+      <label for="max">Max</label>
+      <input 
+        type="number" 
+        name="price[max]" 
+        id="max" 
+        min="0" 
+        max="5000" 
+        step="1"
+        value="<%= query.price ? query.price.max : '' %>"
+      >
+    </div>
+  </fieldset>
+  <br>
+  <fieldset>
+    <legend>Rating</legend>
+    <label>
+      <input 
+        type="checkbox"
+        class="nes-checkbox" 
+        value="1" 
+        name="avgRating[]" 
+        <%= query.avgRating && query.avgRating.includes('1') ? 'checked' : '' %>
+      >
+      <span><i class="nes-icon is-small star"></i></span>
+    </label>
+    <label>
+      <input 
+        type="checkbox"
+        class="nes-checkbox" 
+        value="2" 
+        name="avgRating[]" 
+        <%= query.avgRating && query.avgRating.includes('2') ? 'checked' : '' %>
+      >
+      <span>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+      </span>
+    </label>
+    <label>
+      <input 
+        type="checkbox"
+        class="nes-checkbox" 
+        value="3" 
+        name="avgRating[]" 
+        <%= query.avgRating && query.avgRating.includes('3') ? 'checked' : '' %>
+      >
+      <span>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+      </span>
+    </label>
+    <label>
+      <input 
+        type="checkbox"
+        class="nes-checkbox" 
+        value="4" 
+        name="avgRating[]" 
+        <%= query.avgRating && query.avgRating.includes('4') ? 'checked' : '' %>
+      >
+      <span>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+      </span>
+    </label>
+    <label>
+      <input 
+        type="checkbox"
+        class="nes-checkbox" 
+        value="5" 
+        name="avgRating[]" 
+        <%= query.avgRating && query.avgRating.includes('5') ? 'checked' : '' %>
+      >
+      <span>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+        <i class="nes-icon is-small star"></i>
+      </span>
+    </label>
+  </fieldset>
+  <a href="/posts" class="nes-btn is-warning">Reset Form</a>
+  <button type="submit" class="nes-btn is-primary">Search</button>
+</form>
